@@ -349,7 +349,7 @@ public class FrmHesapMakinesi extends javax.swing.JFrame {
         if (!operator.equals("/")) {
             txtEkran.setText((int)sonuc + "");
             sayi1 = sayi2;//
-            sayi2 = sonuc;// Çıkan sonuç eşittire basılmaya devam ettikçe devam eder.
+            sayi2 = sonuc;// Çıkan sonuç eşittire basılmaya devam ettikçe devam eder...
 
         } else {
             txtEkran.setText(sonucBolum + "");
