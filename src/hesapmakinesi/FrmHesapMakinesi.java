@@ -377,10 +377,10 @@ public class FrmHesapMakinesi extends javax.swing.JFrame {
     private void btnNoktaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNoktaActionPerformed
         ekranKontrol();
         if (txtEkran.getText().equals("")) {
-            txtEkran.setText("0" + ",");
+            txtEkran.setText("0" + ".");
         }
-        else if (!txtEkran.getText().contains(",")) {
-            txtEkran.setText(txtEkran.getText()+",");
+        else if (!txtEkran.getText().contains(".")) {
+            txtEkran.setText(txtEkran.getText()+".");
         }
         
     }//GEN-LAST:event_btnNoktaActionPerformed
