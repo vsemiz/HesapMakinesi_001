@@ -5,6 +5,11 @@
  */
 package hesapmakinesi;
 
+import java.awt.Color;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+import javax.swing.BorderFactory;
+
 /**
  *
  * @author sd
@@ -16,6 +21,7 @@ public class FrmHesapMakinesi extends javax.swing.JFrame {
      */
     public FrmHesapMakinesi() {
         initComponents();
+        
     }
 
     /**
@@ -316,60 +322,73 @@ public class FrmHesapMakinesi extends javax.swing.JFrame {
     }//GEN-LAST:event_btn9ActionPerformed
 
     private void btnToplaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnToplaActionPerformed
-        sayi1 = Integer.parseInt(txtEkran.getText());
+        sayi1 = Double.parseDouble(txtEkran.getText());
         txtEkran.setText("+");
         operator = "+";
 
     }//GEN-LAST:event_btnToplaActionPerformed
 
     private void btnCikarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCikarActionPerformed
-        sayi1 = Integer.parseInt(txtEkran.getText());
+        sayi1 = Double.parseDouble(txtEkran.getText());
         txtEkran.setText("-");
         operator = "-";
     }//GEN-LAST:event_btnCikarActionPerformed
 
     private void btnCarpActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCarpActionPerformed
-        sayi1 = Integer.parseInt(txtEkran.getText());
+        sayi1 = Double.parseDouble(txtEkran.getText());
         txtEkran.setText("x");
         operator = "x";
     }//GEN-LAST:event_btnCarpActionPerformed
 
     private void btnBolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBolActionPerformed
-        sayi1 = Integer.parseInt(txtEkran.getText());
+        sayi1 = Double.parseDouble(txtEkran.getText());
         txtEkran.setText("/");
         operator = "/";
     }//GEN-LAST:event_btnBolActionPerformed
 
 
     private void btnEsittirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEsittirActionPerformed
-        sayi2 = Integer.parseInt(txtEkran.getText());
 
+        if (!txtEkran.getText().equals("")) {
+            
+            sayi2 = Double.parseDouble(txtEkran.getText());
         this.hesapla(operator);
 
-        if (!operator.equals("/")) {
-            txtEkran.setText((int)sonuc + "");
-            sayi1 = sayi2;//
-            sayi2 = sonuc;// Çıkan sonuç eşittire basılmaya devam ettikçe devam eder...
+        if ((sonuc == Math.floor(sonuc)) && !Double.isInfinite(sonuc)) {
 
+            txtEkran.setText((int) sonuc + "");
+            
+        //-------------- Son Sıfır konltrolü  
+        } else if ((new BigDecimal(sonuc).setScale(2, BigDecimal.ROUND_HALF_UP) + "").
+                substring((new BigDecimal(sonuc).setScale(2, BigDecimal.ROUND_HALF_UP) + "").length() - 1).
+                equals("0")) // Üstteki üç satır aslında tek satır ancak uzadığı için alt alta aldım.
+                             // Burada yapılan bölüm sonucunda eğer son rakat 0 ise yazdırmıyoruz, bunun kontrolü yapılıyor.
+                             // Örneğin 7/2 aşağıdaki sonuçta 3,50 çıkarken burada s
+                             // etScale(1, BigDecimal.ROUND_HALF_UP) ile sondaki "0" ı atıyoruz.
+        {
+            txtEkran.setText(new BigDecimal(sonuc).setScale(1, BigDecimal.ROUND_HALF_UP) + "");
+        //--------------
+        //-------------- Virgülden sonraki iki rakamı yazdırma
         } else {
-            txtEkran.setText(sonucBolum + "");
-            sonucBolum =  sayi1;
-
+            txtEkran.setText(new BigDecimal(sonuc).setScale(2, BigDecimal.ROUND_HALF_UP) + "");
         }
-
-
+                            // Burada normalde "double" ile virgülden sonra gelen uzunca küsürü yuvarlayıp 2 heneye çeviriyoruz.
+        //---------------
+        operator = "";
+            
+        }   
     }//GEN-LAST:event_btnEsittirActionPerformed
 
     private void btnGeriActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGeriActionPerformed
         String geri = null;
-        
-        if (txtEkran.getText().length() >0) {
-           
-                StringBuilder geriSayi = new StringBuilder(txtEkran.getText());
-                geriSayi.deleteCharAt(txtEkran.getText().length()-1);
-                geri = geriSayi.toString();
-                txtEkran.setText(geri);
-                
+
+        if (txtEkran.getText().length() > 0) {
+
+            StringBuilder geriSayi = new StringBuilder(txtEkran.getText());
+            geriSayi.deleteCharAt(txtEkran.getText().length() - 1);
+            geri = geriSayi.toString();
+            txtEkran.setText(geri);
+
         }
 
     }//GEN-LAST:event_btnGeriActionPerformed
@@ -378,11 +397,10 @@ public class FrmHesapMakinesi extends javax.swing.JFrame {
         ekranKontrol();
         if (txtEkran.getText().equals("")) {
             txtEkran.setText("0" + ".");
+        } else if (!txtEkran.getText().contains(".")) {
+            txtEkran.setText(txtEkran.getText() + ".");
         }
-        else if (!txtEkran.getText().contains(".")) {
-            txtEkran.setText(txtEkran.getText()+".");
-        }
-        
+
     }//GEN-LAST:event_btnNoktaActionPerformed
 
     private void btnSil1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSil1ActionPerformed
@@ -403,16 +421,24 @@ public class FrmHesapMakinesi extends javax.swing.JFrame {
                 if ("Nimbus".equals(info.getName())) {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
+
                 }
             }
         } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(FrmHesapMakinesi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmHesapMakinesi.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(FrmHesapMakinesi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmHesapMakinesi.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(FrmHesapMakinesi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmHesapMakinesi.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(FrmHesapMakinesi.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+            java.util.logging.Logger.getLogger(FrmHesapMakinesi.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
 
@@ -427,11 +453,10 @@ public class FrmHesapMakinesi extends javax.swing.JFrame {
     double sayi1;
     double sayi2;
     double sonuc;
-    double sonucBolum;
     String operator;
 
     public void hesapla(String operator) {
-
+        
         switch (operator) {
             case "+":
                 sonuc = sayi1 + sayi2;
@@ -443,23 +468,29 @@ public class FrmHesapMakinesi extends javax.swing.JFrame {
                 sonuc = sayi1 * sayi2;
                 break;
             case "/":
-                if (sayi1 % sayi2 != 0) {
-                    sonucBolum = sayi1 /  sayi2;
-                    
-                } else {
-                    sonuc = sayi1 / sayi2;
-                }
+                sonuc = sayi1 / sayi2;
                 break;
         }
 
     }
 
     public void ekranKontrol() {
+
         if (txtEkran.getText().equals("+") || txtEkran.getText().equals("-") || txtEkran.getText().equals("x") || txtEkran.getText().equals("/")) {
 
             txtEkran.setText("");
         }
     }
+  
+    
+//  Başlangıça "=" tıklanırsa ekran rengini değiştirir.    
+//    public void sistemKontrol(){   
+//        
+//        if (txtEkran.getText().equals("")) {
+//            txtEkran.setBorder(BorderFactory.createLineBorder(Color.red));
+//        } else { txtEkran.setBorder(BorderFactory.createEmptyBorder());
+//        }
+//    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btn0;
