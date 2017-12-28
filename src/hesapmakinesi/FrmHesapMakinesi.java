@@ -456,7 +456,7 @@ public class FrmHesapMakinesi extends javax.swing.JFrame {
     String operator;
 
     public void hesapla(String operator) {
-        
+        //------ Burada operator seçiliyor...
         switch (operator) {
             case "+":
                 sonuc = sayi1 + sayi2;
